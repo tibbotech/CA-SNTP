@@ -1,0 +1,54 @@
+
+'------------------------------------------------------------------------------------------------------
+'										Internet Time Service Demo
+'------------------------------------------------------------------------------------------------------
+'The purpose of this demo program is to show users how to get internet time from SNTP server.
+'How does this demo work?
+'1. Some SNTP servers switch IPs. Therefore, we implement DNS in this program to obtain SNTP server 
+'	IP every time when the device tries to connect to SNTP server.
+'2. Set the DNS Server by using sNameServerIP = , 
+'3. Use InitDNS to initialize the sock for DNS server connection (you might need to change the "const DNSSOCK"
+'	in DNS.tbs)
+'4. Use InitSNTP to initialize the sock for SNTP server connection (you might need to change the "const SNTPSOCK"
+'	in SNTP.tbs)
+'5. Use DNSQuery("Time.Server.IP") to get the IP for your time server
+'6. Use ConnectToTimeServer(CovertToIPString(1),"") to connect to Time Server (ConvertToString(1) is a public
+'	function of DNS, please refer to DNS.tbs)
+'7. Use SNTPQuery to ask SNTP server current time.
+'8. Put GetTime in the on_sock_data_arrival event to extract the data from rxbuff, and change the time into
+'	easy-to-read format.
+'
+'RD.042007
+'------------------------------------------------------------------------------------------------------
+
+include "DNS.tbh" 
+include "SNTP.tbh"
+
+dim i as byte
+sub on_sys_init
+'set IP address						
+	net.gatewayip = "192.168.1.1"  	'<----------- you may need to change this
+	net.netmask = "255.255.255.0"	'<----------- you may need to change this
+	net.ip = "192.168.1.159" 		'<----------- you may need to change this
+	sNameServerIP = "168.95.1.1"	'<----------- you may need to change this	
+	InitDNS							'Initialize sock for DNS server connection 
+	InitSNTP						'Initialize sock for SNTP server connection
+	DNSQuery("time.nist.gov") 		'<----------- change to your closest Public NTP Server for minimum delay
+end sub
+
+sub on_sock_data_arrival
+	dim i as byte
+	dim sTime as string
+	if sock.num = 0 then
+		ExtractFromRXBuff 		'Extract IP data from DNS sock rx buffer 
+	end if
+	if sock.num = 1 then	
+		GetTime					'Extract Internet time in SNTP sock rx buffer
+	end if
+	sTime = str(wYears) + "/" + str(wMonthes) + "/" + str(wDays) + "  " + str(wHours) + ":" + str(wMinus) + ":" + str(wSeconds) 
+end sub
+
+sub on_button_pressed
+	ConnectToTimeServer(ConvertToIPString(1),"")	'ConnectToTimeServer(IP,Port) leave Port as "" for default value port 123
+	SNTPQuery										'Query for Time
+end sub

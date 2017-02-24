@@ -1,0 +1,10 @@
+declare function ConnectToTimeServer(sTimeServerIP as string, sTimeServerPort as string) as byte
+declare function GetTime as byte
+declare function SNTPQuery as byte
+declare sub InitSNTP 
+declare wYears as word
+declare wMonthes as word
+declare wDays as word
+declare wHours as word
+declare wMinus as word
+declare wSeconds as word
