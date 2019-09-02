@@ -1,0 +1,60 @@
+[project]
+version = 1
+platform = TPP3W(G2)
+src_lib_ver = 2_01_03
+name = ITS
+output = ITS.tpc
+debug = on
+defines = /dLCD_TYPE=SAMSUNG_S6B0108 /dOBJECT_LCD=LCD_ENABLED /dOBJECT_FD=FD_ENABLED /dOBJECT_KP=KP_ENABLED /dOBJECT_WLN=WLN_ENABLED
+transport = udp_broadcast
+
+[address1]
+platform = EM500W
+transport = udp_broadcast
+address = 0.0.0.73.225.151
+
+[address2]
+platform = TPP2W
+transport = udp_broadcast
+address = 0.36.119.81.166.51
+
+[file1]
+path = main.tbs
+type = basic
+format = 
+condition = 
+locked = no
+location = 
+
+[file2]
+path = DNS.tbh
+type = header
+format = 
+condition = 
+locked = no
+location = 
+
+[file3]
+path = DNS.tbs
+type = basic
+format = 
+condition = 
+locked = no
+location = 
+
+[file4]
+path = SNTP.tbs
+type = basic
+format = 
+condition = 
+locked = no
+location = 
+
+[file5]
+path = SNTP.tbh
+type = header
+format = 
+condition = 
+locked = no
+location = 
+
